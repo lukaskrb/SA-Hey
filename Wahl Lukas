@@ -95,11 +95,6 @@ class CentralWidget(QChartView):
 
         self.setChart(chart)
 
-
-        chart.legend().setVisible(True)
-        chart.legend().setAlignment(Qt.AlignmentFlag.AlignTop)
-
-
         self.__line_series_union.setName("Union")
         self.__line_series_afd.setName("AfD")
         self.__line_series_spd.setName("SPD")
