@@ -1,0 +1,52 @@
+from PyQt6.QtCore import QTimer, QTime, pyqtSlot, Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLCDNumber, QLineEdit, QPushButton, QLabel, QGridLayout
+
+
+class CentralWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.input_label = QLabel("Gebe die Zeit in Sekunden ein:")
+        self.input_field = QLineEdit()
+        self.input_field.setPlaceholderText("z.B.10")
+
+        self.lcd_display = QLCDNumber()
+        self.lcd_display.display("00:00:00")
+
+        self.start_button = QPushButton("Start Countdown")
+        self.start_button.clicked.connect(self.start_countdown)
+
+
+        layout = QGridLayout()
+        layout.addWidget(self.input_label, 0, 0)
+        layout.addWidget(self.input_field, 1, 0)
+        layout.addWidget(self.lcd_display)
+        layout.addWidget(self.start_button)
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_countdown)
+        self.time_left = QTime(0, 0, 0)
+
+        self.setLayout(layout)
+
+    @pyqtSlot()
+    def start_countdown(self):
+        try:
+            seconds = int(self.input_field.text())
+            self.time_left = QTime(0, 0, seconds)
+            self.lcd_display.display(self.time_left.toString("hh:mm:ss"))
+            self.timer.start(1000)
+            self.start_button.setEnabled(False)
+        except ValueError:
+            self.input_label.setText("Ungültige Zahl")
+
+    @pyqtSlot()
+    def update_countdown(self):
+        if self.time_left == QTime(0, 0, 0):
+            self.timer.stop()
+            self.start_button.setEnabled(True)
+            self.input_label.setText("Countdown beendet")
+
+        else:
+            self.time_left = self.time_left.addSecs(-1)
+            self.lcd_display.display(self.time_left.toString("hh:mm:ss"))
