@@ -1,0 +1,19 @@
+from PyQt6.QtCore import QDateTime
+from PyQt6.QtWidgets import QWidget
+
+
+class CentralWidget(QWidget):
+    def __init__(self, parent=None):
+        super(CentralWidget, self).__init__(parent)
+
+        date_string = "21.05.2025"
+
+        format_string = "dd:MM:yyyy"
+
+        date_time = QDateTime.fromString(date_string, format_string)
+
+        if date_time.isValid():
+            print("Datum", date_time.toString())
+
+        else:
+            print("ungültiges Datum")
